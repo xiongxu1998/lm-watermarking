@@ -205,7 +205,7 @@ def generate(prompt, args, model=None, device=None, tokenizer=None):
        and generate watermarked text by passing it to the generate method of the model
        as a logits processor. """
     
-    print(f"Generating with {args}")
+    # print(f"Generating with {args}")
 
     watermark_processor = WatermarkLogitsProcessor(vocab=list(tokenizer.get_vocab().values()),
                                                     gamma=args.gamma,
@@ -319,8 +319,7 @@ def detect(input_text, args, device=None, tokenizer=None):
         output = list_format_scores(score_dict, watermark_detector.z_threshold)
     else:
         # output = (f"Error: string not long enough to compute watermark presence.")
-        output = [["Error","string too short to compute metrics"]]
-        output += [["",""] for _ in range(6)]
+        output = None
     return output, args
 
 def run_gradio(args, model=None, device=None, tokenizer=None):
