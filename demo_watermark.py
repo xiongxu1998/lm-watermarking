@@ -132,12 +132,12 @@ def parse_args():
         default="",
         help="Single or comma separated list of the preprocessors/normalizer names to use when performing watermark detection.",
     )
-    parser.add_argument(
-        "--ignore_repeated_bigrams",
-        type=str2bool,
-        default=False,
-        help="Whether to use the detection method that only counts each unqiue bigram once as either a green or red hit.",
-    )
+    # parser.add_argument(
+    #     "--ignore_repeated_bigrams",
+    #     type=str2bool,
+    #     default=False,
+    #     help="Whether to use the detection method that only counts each unqiue bigram once as either a green or red hit.",
+    # )
     parser.add_argument(
         "--detection_z_threshold",
         type=float,
