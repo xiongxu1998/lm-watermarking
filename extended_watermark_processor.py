@@ -171,6 +171,8 @@ class WatermarkLogitsProcessor(WatermarkBase, LogitsProcessor):
         """Call with previous context as input_ids, and scores for next token."""
 
         # this is lazy to allow us to co-locate on the watermarked model's device
+        if input_ids.shape[-1] < self.context_width:
+            return scores
         self.rng = torch.Generator(device=input_ids.device) if self.rng is None else self.rng
 
         # NOTE, it would be nice to get rid of this batch loop, but currently,

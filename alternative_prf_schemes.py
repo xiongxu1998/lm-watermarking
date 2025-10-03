@@ -44,7 +44,7 @@ def seeding_scheme_lookup(seeding_scheme: str):
         hash_key = 15485863
     elif seeding_scheme == "algorithm-3" or seeding_scheme == "selfhash":
         prf_type = "anchored_minhash_prf"
-        context_width = 4
+        context_width = 1
         self_salt = True
         hash_key = 15485863
     elif seeding_scheme == "minhash":

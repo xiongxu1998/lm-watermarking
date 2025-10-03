@@ -28,22 +28,22 @@ def generate(prompt, args, model=None, device=None, tokenizer=None):
        as a logits processor. """
 
     watermark_processor = WatermarkLogitsProcessor(vocab=list(tokenizer.get_vocab().values()),
-                                                    gamma=args.gamma,
-                                                    delta=args.delta,
-                                                    seeding_scheme=args.seeding_scheme,
+                                                    gamma=0.25,
+                                                    delta=2.0,
+                                                    seeding_scheme="selfhash",
                                                     select_green_tokens=args.select_green_tokens)
 
-    gen_kwargs = dict(max_new_tokens=args.max_new_tokens)
+    gen_kwargs = dict(max_new_tokens=args.max_new_tokens, min_new_tokens=150, forced_eos_token_id=None, eos_token_id=-1)
 
     if args.use_sampling:
         gen_kwargs.update(dict(
             do_sample=True, 
             top_k=0,
-            temperature=args.sampling_temp
+            temperature=args.sampling_temp,
         ))
     else:
         gen_kwargs.update(dict(
-            num_beams=args.n_beams
+            num_beams=args.n_beams,
         ))
 
     generate_without_watermark = partial(
@@ -78,6 +78,8 @@ def generate(prompt, args, model=None, device=None, tokenizer=None):
         # need to isolate the newly generated tokens
         output_without_watermark = output_without_watermark[:,tokd_input["input_ids"].shape[-1]:]
         output_with_watermark = output_with_watermark[:,tokd_input["input_ids"].shape[-1]:]
+
+    print("output_with_watermark:", output_with_watermark)
 
     decoded_output_without_watermark = tokenizer.batch_decode(output_without_watermark, skip_special_tokens=True)[0]
     decoded_output_with_watermark = tokenizer.batch_decode(output_with_watermark, skip_special_tokens=True)[0]
@@ -178,6 +180,8 @@ def test_cnn_dailymail(args):
                                                                                             device=device, 
                                                                                             tokenizer=tokenizer)
             
+            print("decoded_output_with_watermark: ", decoded_output_with_watermark)
+            
             without_watermark_detection_result = detect(decoded_output_without_watermark, 
                                                     args,
                                                     model,
@@ -194,6 +198,7 @@ def test_cnn_dailymail(args):
                 continue
             
             text_output_without_watermark, _ = without_watermark_detection_result
+            print("text_output_without_watermark: ", text_output_without_watermark)
             for key, value in text_output_without_watermark:
                 if key == "Prediction":
                     num_type1_error += 1 if value == "Watermarked" else 0
