@@ -75,7 +75,7 @@ def parse_args():
     parser.add_argument(
         "--max_new_tokens",
         type=int,
-        default=200,
+        default=300,
         help="Maximmum number of new tokens to generate.",
     )
     parser.add_argument(
@@ -117,13 +117,13 @@ def parse_args():
     parser.add_argument(
         "--gamma",
         type=float,
-        default=0.25,
+        default=0.5,
         help="The fraction of the vocabulary to partition into the greenlist at each generation and verification step.",
     )
     parser.add_argument(
         "--delta",
         type=float,
-        default=2.0,
+        default=5.0,
         help="The amount/bias to add to each of the greenlist token logits before each token sampling step.",
     )
     parser.add_argument(
@@ -188,10 +188,8 @@ def load_model(args):
 
     if args.use_gpu:
         device = "cuda" if torch.cuda.is_available() else "cpu"
-        if args.load_fp16: 
-            pass
-        else: 
-            model = model.to(device)
+    
+        model = model.to(device)
     else:
         device = "cpu"
     model.eval()

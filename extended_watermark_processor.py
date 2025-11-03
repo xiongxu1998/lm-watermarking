@@ -570,6 +570,8 @@ class WatermarkDetector(WatermarkBase):
 
         # call score method
         output_dict = {}
+        
+        print("tokenized_text: ", tokenized_text)
 
         if window_size is not None:
             # assert window_size <= len(tokenized_text) cannot assert for all new types

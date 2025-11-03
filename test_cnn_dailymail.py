@@ -29,11 +29,11 @@ def generate(prompt, args, model=None, device=None, tokenizer=None):
 
     watermark_processor = WatermarkLogitsProcessor(vocab=list(tokenizer.get_vocab().values()),
                                                     gamma=0.25,
-                                                    delta=2.0,
+                                                    delta=1.0,
                                                     seeding_scheme="selfhash",
                                                     select_green_tokens=args.select_green_tokens)
 
-    gen_kwargs = dict(max_new_tokens=args.max_new_tokens, min_new_tokens=150, forced_eos_token_id=None, eos_token_id=-1)
+    gen_kwargs = dict(max_new_tokens=args.max_new_tokens, forced_eos_token_id=None)
 
     if args.use_sampling:
         gen_kwargs.update(dict(
@@ -180,6 +180,7 @@ def test_cnn_dailymail(args):
                                                                                             device=device, 
                                                                                             tokenizer=tokenizer)
             
+            print("decoded_output_with_watermark: ", decoded_output_without_watermark)
             print("decoded_output_with_watermark: ", decoded_output_with_watermark)
             
             without_watermark_detection_result = detect(decoded_output_without_watermark, 
