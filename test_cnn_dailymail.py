@@ -29,7 +29,7 @@ def generate(prompt, args, model=None, device=None, tokenizer=None):
 
     watermark_processor = WatermarkLogitsProcessor(vocab=list(tokenizer.get_vocab().values()),
                                                     gamma=0.25,
-                                                    delta=1.0,
+                                                    delta=4,
                                                     seeding_scheme="selfhash",
                                                     select_green_tokens=args.select_green_tokens)
 
